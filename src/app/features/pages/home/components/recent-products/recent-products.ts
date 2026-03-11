@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ProductCardComponent } from "../../../../../shared/components/ui/product-item/product-item";
-import { Product } from '../../../../../shared/services/product/product';
+import { ProductService } from '../../../../../shared/services/product/product';
 import { Product as ProductInterface }  from '../../../../../shared/interfaces/product/product';
 @Component({
   selector: 'app-recent-products',
@@ -10,17 +10,17 @@ import { Product as ProductInterface }  from '../../../../../shared/interfaces/p
 })
 
 export class RecentProducts implements OnInit {
-  private readonly _product = inject(Product);
-  products!:ProductInterface[] ;
+  private readonly _productService = inject(ProductService);
+  products = signal<ProductInterface[]>([]) ;
 
   ngOnInit(): void {
     this.getProducts();
   }
   getProducts() {
-    this._product.getProducts().subscribe({
+    this._productService.getProducts().subscribe({
       next: (res) => {
         console.log(res);
-        this.products = res.data
+        this.products.set(res.data) 
       },
       error: (err) => {
         console.log(err);

@@ -1,1 +1,70 @@
-<p>login works!</p>
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="login()"
+  class="w-[40%] my-6 px-6 py-10 mx-auto border border-slate-200 bg-slate-100 rounded-lg"
+>
+  <div class="w-[90%] mx-auto mb-7">
+    <h2 class="text-2xl text-main mb-1.5 ">Login Form</h2>
+    <p class="text-slate-500 ">Let's start our Journey together.</p>
+  </div>
+
+  @if (apiError) {
+    <p
+      class="col-span-2  bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg"
+    >
+      {{ apiError }}
+    </p>
+  }
+
+  <!-- Email Input -->
+  <hlm-form-field class="w-[90%] mx-auto mb-6">
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="email"
+      type="email"
+      placeholder="Email"
+    />
+
+    @if (loginForm.get('email')?.errors && loginForm.get('email')?.touched) {
+      @if (loginForm.get('email')?.getError('required')) {
+        <hlm-error>The email is required.</hlm-error>
+      } @else if (loginForm.get('email')?.getError('pattern')) {
+        <hlm-error>Invalid Email Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+  <!-- Password Input -->
+  <hlm-form-field class="w-[90%] mx-auto mb-6">
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="password"
+      type="password"
+      placeholder="Password"
+    />
+
+    @if (loginForm.get('password')?.errors && loginForm.get('password')?.touched) {
+      @if (loginForm.get('password')?.getError('required')) {
+        <hlm-error>The Password is required.</hlm-error>
+      } @else if (loginForm.get('password')?.getError('pattern')) {
+        <hlm-error>Invalid Password Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+  <div class="w-[90%] mx-auto mt-4">
+    <button
+      type="submit"
+      [disabled]="isCallingApi()"
+      class="myBtn w-full disabled:cursor-not-allowed disabled:bg-main disabled:opacity-65"
+    >
+      @if (isCallingApi()) {
+        <i class="fa fa-spin fa-spinner mr-2"></i>Submit
+      } @else {
+        Submit
+      }
+    </button>
+  </div>
+</form>

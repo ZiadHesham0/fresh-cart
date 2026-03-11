@@ -27,6 +27,9 @@
   .container{
     @apply mx-auto
   }
+  .myBtn{
+    @apply text-white bg-main hover:bg-[#088008] transition px-2 py-1 rounded-md cursor-pointer
+  }
 }
 
 :root {

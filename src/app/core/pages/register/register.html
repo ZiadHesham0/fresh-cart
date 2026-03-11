@@ -1,10 +1,30 @@
 <form
   [formGroup]="registerForm"
   (ngSubmit)="register()"
-  class="w-[60%] my-6 grid grid-cols-2 gap-3 justify-center p-6 mx-auto border border-main bg-slate-100 rounded-lg"
+  class="w-[60%] my-6 grid grid-cols-2 gap-7 justify-center px-6 py-10 mx-auto border border-slate-200 bg-slate-100 rounded-lg"
 >
+  <div class="col-span-2">
+    <h2 class="text-2xl text-main mb-1.5">Register Form</h2>
+    <p class="text-slate-500">Let's start our Journey together.</p>
+  </div>
+
+  @if (apiError) {
+    <p
+      class="col-span-2 text-red-500 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg"
+    >
+      {{ apiError }}
+    </p>
+  }
+
+  <!-- User Name Input -->
   <hlm-form-field class="col-span-2">
-    <input class=" bg-white" hlmInput formControlName="name" type="text" placeholder="UserName" />
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="name"
+      type="text"
+      placeholder="UserName"
+    />
 
     @if (registerForm.get('name')?.errors && registerForm.get('name')?.touched) {
       @if (registerForm.get('name')?.getError('required')) {
@@ -16,8 +36,16 @@
       }
     }
   </hlm-form-field>
+
+  <!-- Email Input -->
   <hlm-form-field class="col-span-2">
-    <input class=" bg-white" hlmInput formControlName="email" type="email" placeholder="Email" />
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="email"
+      type="email"
+      placeholder="Email"
+    />
 
     @if (registerForm.get('email')?.errors && registerForm.get('email')?.touched) {
       @if (registerForm.get('email')?.getError('required')) {
@@ -28,10 +56,17 @@
     }
   </hlm-form-field>
 
+  <!-- Password Input -->
   <hlm-form-field class="col-span-1">
-    <input class="bg-white" hlmInput formControlName="password" type="password" placeholder="Password" />
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="password"
+      type="password"
+      placeholder="Password"
+    />
 
-    @if ((registerForm.get('password')?.errors ) && registerForm.get('password')?.touched) {
+    @if (registerForm.get('password')?.errors && registerForm.get('password')?.touched) {
       @if (registerForm.get('password')?.getError('required')) {
         <hlm-error>The Password is required.</hlm-error>
       } @else if (registerForm.get('password')?.getError('pattern')) {
@@ -40,22 +75,37 @@
     }
   </hlm-form-field>
 
+  <!-- RePassword Input -->
   <hlm-form-field class="col-span-1">
-    <input class=" bg-white col-span-1" hlmInput formControlName="rePassword" type="password" placeholder="Password Confirmation" />
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="rePassword"
+      type="password"
+      placeholder="Password Confirmation"
+    />
 
-    @if (registerForm.get('rePassword')?.errors && registerForm.get('rePassword')?.touched) {
+    @if (
+      registerForm.get('rePassword')?.touched &&
+      (registerForm.get('rePassword')?.errors || registerForm.getError('misMatch'))
+    ) {
       @if (registerForm.get('rePassword')?.getError('required')) {
         <hlm-error>The Password is required.</hlm-error>
-      } @else if (registerForm.get('rePassword')?.getError('pattern')) {
-        <hlm-error>Invalid Password Format</hlm-error>
+      } @else if (registerForm.getError('misMatch')) {
+        <hlm-error>Password MisMatch</hlm-error>
       }
     }
   </hlm-form-field>
 
-
-
+  <!-- Phone Input -->
   <hlm-form-field class="col-span-2">
-    <input class=" bg-white" hlmInput formControlName="phone" type="tel" placeholder="Phone Number" />
+    <input
+      class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+      hlmInput
+      formControlName="phone"
+      type="tel"
+      placeholder="Phone Number"
+    />
 
     @if (registerForm.get('phone')?.errors && registerForm.get('phone')?.touched) {
       @if (registerForm.get('phone')?.getError('required')) {
@@ -66,5 +116,15 @@
     }
   </hlm-form-field>
 
-
+  <button
+    type="submit"
+    [disabled]="isCallingApi()"
+    class="myBtn col-span-2 mt-5 disabled:cursor-not-allowed disabled:bg-main disabled:opacity-65"
+  >
+    @if (isCallingApi()) {
+      <i class="fa fa-spin fa-spinner mr-2"></i>Submit
+    } @else {
+      Submit
+    }
+  </button>
 </form>

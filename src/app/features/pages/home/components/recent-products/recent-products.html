@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 justify-between gap-y-10">
-  @for (p of products; track $index) {
+  @for (p of products(); track $index) {
     <div class="flex justify-center">
         <app-product-item  [product]="p" />
     </div>
