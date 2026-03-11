@@ -1,0 +1,70 @@
+<form
+  [formGroup]="registerForm"
+  (ngSubmit)="register()"
+  class="w-[60%] my-6 grid grid-cols-2 gap-3 justify-center p-6 mx-auto border border-main bg-slate-100 rounded-lg"
+>
+  <hlm-form-field class="col-span-2">
+    <input class=" bg-white" hlmInput formControlName="name" type="text" placeholder="UserName" />
+
+    @if (registerForm.get('name')?.errors && registerForm.get('name')?.touched) {
+      @if (registerForm.get('name')?.getError('required')) {
+        <hlm-error>The name is required.</hlm-error>
+      } @else if (registerForm.get('name')?.getError('maxlength')) {
+        <hlm-error>Max Length is 20</hlm-error>
+      } @else if (registerForm.get('name')?.getError('minlength')) {
+        <hlm-error>Min Length is 3</hlm-error>
+      }
+    }
+  </hlm-form-field>
+  <hlm-form-field class="col-span-2">
+    <input class=" bg-white" hlmInput formControlName="email" type="email" placeholder="Email" />
+
+    @if (registerForm.get('email')?.errors && registerForm.get('email')?.touched) {
+      @if (registerForm.get('email')?.getError('required')) {
+        <hlm-error>The email is required.</hlm-error>
+      } @else if (registerForm.get('email')?.getError('pattern')) {
+        <hlm-error>Invalid Email Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+  <hlm-form-field class="col-span-1">
+    <input class="bg-white" hlmInput formControlName="password" type="password" placeholder="Password" />
+
+    @if ((registerForm.get('password')?.errors ) && registerForm.get('password')?.touched) {
+      @if (registerForm.get('password')?.getError('required')) {
+        <hlm-error>The Password is required.</hlm-error>
+      } @else if (registerForm.get('password')?.getError('pattern')) {
+        <hlm-error>Invalid Password Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+  <hlm-form-field class="col-span-1">
+    <input class=" bg-white col-span-1" hlmInput formControlName="rePassword" type="password" placeholder="Password Confirmation" />
+
+    @if (registerForm.get('rePassword')?.errors && registerForm.get('rePassword')?.touched) {
+      @if (registerForm.get('rePassword')?.getError('required')) {
+        <hlm-error>The Password is required.</hlm-error>
+      } @else if (registerForm.get('rePassword')?.getError('pattern')) {
+        <hlm-error>Invalid Password Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+
+
+  <hlm-form-field class="col-span-2">
+    <input class=" bg-white" hlmInput formControlName="phone" type="tel" placeholder="Phone Number" />
+
+    @if (registerForm.get('phone')?.errors && registerForm.get('phone')?.touched) {
+      @if (registerForm.get('phone')?.getError('required')) {
+        <hlm-error>The phone is required.</hlm-error>
+      } @else if (registerForm.get('phone')?.getError('pattern')) {
+        <hlm-error>Invalid phone Format</hlm-error>
+      }
+    }
+  </hlm-form-field>
+
+
+</form>

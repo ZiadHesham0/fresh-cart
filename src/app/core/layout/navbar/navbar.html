@@ -1,0 +1,246 @@
+<!-- ============================================================
+  TOP NAVBAR
+  Desktop  → horizontal nav
+  Tablet / Mobile → brand + hamburger; links in RIGHT drawer
+============================================================ -->
+<header class="fixed top-0 inset-x-0 z-40 h-16 bg-white border-b border-gray-200 shadow-sm">
+  <div class="flex items-center justify-between h-full lg:px-16 px-8 max-w-screen-2xl mx-auto">
+    <!-- ── Brand ──────────────────────────────────────────── -->
+    <a routerLink="/home" class="">
+      <img src="./images/freshcart-logo.svg" class="w-40 h-7.75" alt="Site's Logo" />
+    </a>
+
+    <!-- ── Desktop nav links (hidden on tablet/mobile) ────── -->
+    <nav
+      class="hidden lg:flex items-center justify-between w-full mx-3"
+      aria-label="Main navigation"
+    >
+      <ul class="flex gap-2">
+        <li>
+          <a
+            routerLink="/home"
+            routerLinkActive="!text-main"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/cart"
+            routerLinkActive="!text-main"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+            >Cart</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/products"
+            routerLinkActive="!text-main"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+            >Products</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/categories"
+            routerLinkActive="!text-main"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+            >Categories</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/brands"
+            routerLinkActive="!text-main"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+            >Brands</a
+          >
+        </li>
+      </ul>
+
+        <ul class="auth-buttons flex gap-2">
+          <li>
+            <a
+              routerLink="/auth"
+              routerLinkActive="!text-main"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+              >Register</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/auth/login"
+              routerLinkActive="!text-main"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+              >Login</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/auth"
+              routerLinkActive="!text-main"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="px-3 py-1.5 rounded-lg text-md font-medium text-secondary hover:bg-gray-100 transition"
+              >SignOut</a
+            >
+          </li>
+        </ul>
+    </nav>
+
+    <!-- ── Hamburger — tablet / mobile ───────────────────── -->
+    <div class="flex items-center gap-4">
+      <ul class="socialLinks flex gap-2 items-center">
+        <li>
+          <i class="fa-brands fa-facebook text-md text-secondary"></i>
+        </li>
+        <li>
+          <i class="fa-brands fa-instagram text-md text-secondary"></i>
+        </li>
+        <li>
+          <i class="fa-brands fa-tiktok text-md text-secondary"></i>
+        </li>
+        <li>
+          <i class="fa-brands fa-twitter text-md text-secondary"></i>
+        </li>
+        <li>
+          <i class="fa-brands fa-square-linkedin text-md text-secondary"></i>
+        </li>
+        <li>
+          <i class="fa-brands fa-youtube text-md text-secondary"></i>
+        </li>
+      </ul>
+      <button
+        type="button"
+        (click)="toggleDrawer()"
+        [attr.aria-expanded]="drawerOpen()"
+        aria-controls="mobile-drawer"
+        aria-label="Open navigation"
+        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-150"
+      >
+        <span class="relative flex flex-col gap-[5px] w-5 h-4">
+          <span
+            class="block h-0.5 w-full bg-secondary rounded-full transition-all duration-300 origin-center"
+            [ngClass]="{ 'translate-y-[7px] rotate-45': drawerOpen() }"
+          ></span>
+          <span
+            class="block h-0.5 w-full bg-secondary rounded-full transition-all duration-300"
+            [ngClass]="{ 'opacity-0 scale-x-0': drawerOpen() }"
+          ></span>
+          <span
+            class="block h-0.5 w-full bg-secondary rounded-full transition-all duration-300 origin-center"
+            [ngClass]="{ '-translate-y-[7px] -rotate-45': drawerOpen() }"
+          ></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+  BACKDROP
+============================================================ -->
+@if (drawerOpen()) {
+  <div
+    class="lg:hidden fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm"
+    (click)="closeDrawer()"
+    aria-hidden="true"
+  ></div>
+}
+
+<!-- ============================================================
+  RIGHT DRAWER SIDEBAR
+============================================================ -->
+<aside
+  id="mobile-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Mobile navigation"
+  [ngClass]="{
+    'translate-x-0 shadow-2xl': drawerOpen(),
+    'translate-x-full': !drawerOpen(),
+  }"
+  class="lg:hidden fixed top-0 right-0 z-50 h-full w-72 bg-white flex flex-col transition-transform duration-300 ease-in-out"
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200 shrink-0">
+    <!-- ── Brand ───────────────────────── -->
+    <a routerLink="/home" class="flex items-center gap-2.5 shrink-0">
+      <img src="./images/freshcart-logo.svg" alt="Site's Logo" />
+    </a>
+  </div>
+
+  <!-- Nav links — write your links directly here, no loops -->
+  <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-1" aria-label="Mobile navigation">
+    <ul class="flex flex-col gap-2">
+      <li>
+        <a
+          routerLink="/home"
+          routerLinkActive="!text-main bg-gray-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-md block font-medium text-secondary w-full hover:bg-gray-100 transition px-3 py-2 rounded-lg"
+          >Home</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/cart"
+          routerLinkActive="!text-main bg-gray-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-md block font-medium text-secondary w-full hover:bg-gray-100 transition px-3 py-2 rounded-lg"
+          >Cart</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/products"
+          routerLinkActive="!text-main bg-gray-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-md block font-medium text-secondary w-full hover:bg-gray-100 transition px-3 py-2 rounded-lg"
+          >Products</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/categories"
+          routerLinkActive="!text-main bg-gray-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-md block font-medium text-secondary w-full hover:bg-gray-100 transition px-3 py-2 rounded-lg"
+          >Categories</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/brands"
+          routerLinkActive="!text-main bg-gray-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-md block font-medium text-secondary w-full hover:bg-gray-100 transition px-3 py-2 rounded-lg"
+          >Brands</a
+        >
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Footer CTAs -->
+  <div class="shrink-0 p-4 border-t border-gray-200 space-y-2">
+    <button
+      type="button"
+      class="cursor-pointer w-full py-2.5 text-sm font-medium text-white bg-main rounded-lg hover:bg-gray-200 hover:text-main transition-colors"
+    >
+      Sign in
+    </button>
+
+    <button
+      type="button"
+      class="cursor-pointer w-full py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-gray-200 hover:text-red-600 transition-colors"
+    >
+      Sign out
+    </button>
+  </div>
+</aside>
