@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -12,42 +12,52 @@ import { AuthService } from '../../services/auth/auth';
 import { UserAuth } from '../../interfaces/auth/user-auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ErrorMessage } from '../../../shared/components/ui/error-message/error-message';
+import { CustomInput } from "../../../shared/components/ui/custom-input/custom-input";
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, HlmFormFieldImports, HlmInputImports],
+  imports: [ReactiveFormsModule, HlmFormFieldImports, HlmInputImports, ErrorMessage, CustomInput],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register implements OnDestroy {
+export class Register implements OnDestroy , OnInit {
   _authService = inject(AuthService);
   isCallingApi = signal<boolean>(false);
   apiError: string = '';
   _router = inject(Router);
- subscription : Subscription = new Subscription();
+  subscription: Subscription = new Subscription();
   passwordEye: boolean = false;
+  registerForm!: FormGroup;
 
 
-  registerForm = new FormGroup(
-    {
-      name: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-      ]),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
-      ]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/),
-      ]),
-      rePassword: new FormControl('', [Validators.required]),
-      phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
-    },
-    this.passwordConfirmation,
-  );
+  ngOnInit(): void {
+      this.initForm();
+  }
+
+
+  initForm() {
+    this.registerForm = new FormGroup(
+      {
+        name: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(20),
+        ]),
+        email: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+        ]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/),
+        ]),
+        rePassword: new FormControl('', [Validators.required]),
+        phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
+      },
+      this.passwordConfirmation,
+    );
+  }
 
   register() {
     if (this.registerForm.invalid) {
@@ -56,20 +66,22 @@ export class Register implements OnDestroy {
       console.log(this.registerForm);
       this.isCallingApi.set(true);
       this.apiError = '';
-      this.subscription =  this._authService.registerUser(this.registerForm.value as UserAuth).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.isCallingApi.set(false);
-          this.registerForm.reset();
-          this._router.navigate(['/auth/login']);
-        },
-        error: (err) => {
-          console.log(err);
-          this.apiError = err.error.message;
-          this.isCallingApi.set(false);
-        },
-        complete: () => {},
-      });
+      this.subscription = this._authService
+        .registerUser(this.registerForm.value as UserAuth)
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            this.isCallingApi.set(false);
+            this.registerForm.reset();
+            this._router.navigate(['/auth/login']);
+          },
+          error: (err) => {
+            console.log(err);
+            this.apiError = err.error.message;
+            this.isCallingApi.set(false);
+          },
+          complete: () => {},
+        });
     }
   }
 
@@ -83,10 +95,9 @@ export class Register implements OnDestroy {
     }
   }
 
-    toggleShowPassword() {
+  toggleShowPassword() {
     this.passwordEye = !this.passwordEye;
   }
-
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

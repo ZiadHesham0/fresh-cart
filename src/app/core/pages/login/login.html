@@ -11,13 +11,16 @@
 
   <!-- Server Error Message -->
   @if (apiError) {
-    <p class="w-[90%] mx-auto mb-3 bg-red-100 border border-red-400 text-red-700 px-4 py-1.5 rounded-lg">
+    <p
+      class="w-[90%] mx-auto mb-3 bg-red-100 border border-red-400 text-red-700 px-4 py-1.5 rounded-lg"
+    >
       {{ apiError }}
     </p>
   }
 
   <!-- Email Input -->
   <hlm-form-field class="w-[90%] mx-auto mb-6">
+    @let emailControl = loginForm.get('email');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
@@ -26,40 +29,33 @@
       placeholder="Email"
     />
 
-    @if (loginForm.get('email')?.errors && loginForm.get('email')?.touched) {
-      @if (loginForm.get('email')?.getError('required')) {
-        <hlm-error>The email is required.</hlm-error>
-      } @else if (loginForm.get('email')?.getError('pattern')) {
-        <hlm-error>Invalid Email Format</hlm-error>
-      }
-    }
+    <app-error-message [nameControl]="emailControl"></app-error-message>
   </hlm-form-field>
 
   <!-- Password Input -->
   <hlm-form-field class="w-[90%] mx-auto mb-6 relative">
+    @let passwordControl = loginForm.get('password');
+
     <input
       class="bg-white focus-visible:border-main pr-10 focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
       formControlName="password"
-      [type]="passwordEye ? 'text' : 'password' "
+      [type]="passwordEye ? 'text' : 'password'"
       placeholder="Password"
     />
 
-    <span class="absolute top-1.5 right-3 text-slate-500 cursor-pointer" (click)="toggleShowPassword()">
+    <span
+      class="absolute top-1.5 right-3 text-slate-500 cursor-pointer"
+      (click)="toggleShowPassword()"
+    >
       @if (!passwordEye) {
         <i class="fa fa-eye text-sm"></i>
-      }@else {
+      } @else {
         <i class="fa fa-eye-slash text-sm"></i>
       }
     </span>
 
-    @if (loginForm.get('password')?.errors && loginForm.get('password')?.touched) {
-      @if (loginForm.get('password')?.getError('required')) {
-        <hlm-error>The Password is required.</hlm-error>
-      } @else if (loginForm.get('password')?.getError('pattern')) {
-        <hlm-error>Invalid Password Format</hlm-error>
-      }
-    }
+    <app-error-message [nameControl]="passwordControl"></app-error-message>
   </hlm-form-field>
 
   <!-- Submit Button -->

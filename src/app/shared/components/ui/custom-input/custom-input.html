@@ -1,0 +1,13 @@
+<input
+  [type]="type"
+  [value]="value"
+  (input)="onChange($any($event.target).value)"
+  (blur)="handleBlur()"
+  [placeholder]="placeholder"
+  hlmInput
+  [class.ng-invalid]="errorState()"
+  [class.ng-touched]="_touched()"
+  class="bg-white focus-visible:border-main focus-visible:ring-main/30
+         [&.ng-invalid.ng-touched]:focus-visible:border-destructive
+         [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
+/>

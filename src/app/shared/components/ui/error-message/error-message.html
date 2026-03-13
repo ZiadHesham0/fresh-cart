@@ -1,0 +1,11 @@
+    @if ( nameControl && nameControl?.errors && nameControl?.touched) {
+      @if (nameControl?.getError('required')) {
+        <hlm-error>This Field is required.</hlm-error>
+      } @else if (nameControl?.getError('maxlength')) {
+        <hlm-error>Max Length is 20</hlm-error>
+      } @else if (nameControl?.getError('minlength')) {
+        <hlm-error>Min Length is 3</hlm-error>
+      }@else if (nameControl?.getError('pattern')) {
+        <hlm-error>Invalid pattern</hlm-error>
+      }
+    }

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,24 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class Navbar implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private el = inject(ElementRef);
+  _authService = inject(AuthService);
+
+
+  constructor(){
+    // console.log(this._authService.userData() , "hello from naaav component");
+    // this._authService.userData.subscribe({
+    //   next:(res)=>{
+    //     console.log(res , "hello from naaav componentttttttttt");
+    //   },
+    //   error:(err)=>{
+    //     console.log(err);
+    //   }
+    // })
+    console.log(this._authService.userData() , "signaaaal navbarrr");
+    
+  }
+
+
 
   /** Mobile/tablet right drawer state */
   drawerOpen = signal(false);

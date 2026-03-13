@@ -1,8 +1,8 @@
-<!-- ============================================================
-  TOP NAVBAR
+  <!-- ====================================
+   TOP NAVBAR
   Desktop  → horizontal nav
   Tablet / Mobile → brand + hamburger; links in RIGHT drawer
-============================================================ -->
+  ======================================= -->
 <header class="fixed top-0 inset-x-0 z-40 h-16 bg-white border-b border-gray-200 shadow-sm">
   <div class="flex items-center justify-between h-full lg:px-16 px-8 max-w-screen-2xl mx-auto">
     <!-- ── Brand ──────────────────────────────────────────── -->
@@ -63,7 +63,7 @@
         </li>
       </ul>
 
-        <ul class="auth-buttons flex gap-2">
+        <!-- <ul class="auth-buttons flex gap-2">
           <li>
             <a
               routerLink="/auth"
@@ -91,7 +91,7 @@
               >SignOut</a
             >
           </li>
-        </ul>
+        </ul> -->
     </nav>
 
     <!-- ── Hamburger — tablet / mobile ───────────────────── -->
@@ -181,6 +181,7 @@
     <ul class="flex flex-col gap-2">
       <li>
         <a
+        (click)="closeDrawer()"
           routerLink="/home"
           routerLinkActive="!text-main bg-gray-100"
           [routerLinkActiveOptions]="{ exact: true }"
@@ -190,6 +191,7 @@
       </li>
       <li>
         <a
+        (click)="closeDrawer()"
           routerLink="/cart"
           routerLinkActive="!text-main bg-gray-100"
           [routerLinkActiveOptions]="{ exact: true }"
@@ -199,6 +201,7 @@
       </li>
       <li>
         <a
+        (click)="closeDrawer()"
           routerLink="/products"
           routerLinkActive="!text-main bg-gray-100"
           [routerLinkActiveOptions]="{ exact: true }"
@@ -208,6 +211,7 @@
       </li>
       <li>
         <a
+        (click)="closeDrawer()"
           routerLink="/categories"
           routerLinkActive="!text-main bg-gray-100"
           [routerLinkActiveOptions]="{ exact: true }"
@@ -217,6 +221,7 @@
       </li>
       <li>
         <a
+        (click)="closeDrawer()"
           routerLink="/brands"
           routerLinkActive="!text-main bg-gray-100"
           [routerLinkActiveOptions]="{ exact: true }"
