@@ -1,19 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HlmFormFieldImports } from '@spartan-ng/helm/form-field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { AuthService } from '../../services/auth/auth';
-import {  loginAuth } from '../../interfaces/auth/user-auth';
+import { loginAuth } from '../../interfaces/auth/user-auth';
 import { Router } from '@angular/router';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-login',
-  imports: [HlmFormFieldImports, HlmInputImports , ReactiveFormsModule],
+  imports: [HlmFormFieldImports, HlmInputImports, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -22,14 +18,16 @@ export class Login {
   isCallingApi = signal<boolean>(false);
   apiError: string = '';
   _router = inject(Router);
-
+  subscription: Subscription = new Subscription();
+  passwordEye: boolean = false;
+  timeOut! : NodeJS.Timeout;
 
   loginForm = new FormGroup({
-    email: new FormControl('', [
+    email: new FormControl('zyad123@gmail.com', [
       Validators.required,
       Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
     ]),
-    password: new FormControl('', [
+    password: new FormControl('Zzyad@123456789', [
       Validators.required,
       Validators.pattern(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/),
     ]),
@@ -47,7 +45,15 @@ export class Login {
           console.log(res);
           this.isCallingApi.set(false);
           this.loginForm.reset();
-          this._router.navigate(['/home'])
+          // setTimeout(()=>{
+          //   this._router.navigate(['/home']);
+          // } , 2000)
+
+          timer(2000).subscribe(()=>{
+            this._router.navigate(['/home']);
+          })
+          // delay()
+
         },
         error: (err) => {
           console.log(err);
@@ -57,5 +63,14 @@ export class Login {
         complete: () => {},
       });
     }
+  }
+
+  toggleShowPassword() {
+    this.passwordEye = !this.passwordEye;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    // clearTimeout(this.timeOut);
   }
 }

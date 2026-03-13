@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,6 +11,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { AuthService } from '../../services/auth/auth';
 import { UserAuth } from '../../interfaces/auth/user-auth';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -18,11 +19,14 @@ import { Router } from '@angular/router';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {
+export class Register implements OnDestroy {
   _authService = inject(AuthService);
   isCallingApi = signal<boolean>(false);
   apiError: string = '';
   _router = inject(Router);
+ subscription : Subscription = new Subscription();
+  passwordEye: boolean = false;
+
 
   registerForm = new FormGroup(
     {
@@ -52,7 +56,7 @@ export class Register {
       console.log(this.registerForm);
       this.isCallingApi.set(true);
       this.apiError = '';
-      this._authService.registerUser(this.registerForm.value as UserAuth).subscribe({
+      this.subscription =  this._authService.registerUser(this.registerForm.value as UserAuth).subscribe({
         next: (res) => {
           console.log(res);
           this.isCallingApi.set(false);
@@ -77,5 +81,14 @@ export class Register {
     } else {
       return null;
     }
+  }
+
+    toggleShowPassword() {
+    this.passwordEye = !this.passwordEye;
+  }
+
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

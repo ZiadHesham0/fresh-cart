@@ -3,21 +3,22 @@
   (ngSubmit)="register()"
   class="w-[60%] my-6 grid grid-cols-2 gap-7 justify-center px-6 py-10 mx-auto border border-slate-200 bg-slate-100 rounded-lg"
 >
+  <!-- Form Header -->
   <div class="col-span-2">
     <h2 class="text-2xl text-main mb-1.5">Register Form</h2>
     <p class="text-slate-500">Let's start our Journey together.</p>
   </div>
 
+  <!-- Server Error Message -->
   @if (apiError) {
-    <p
-      class="col-span-2 text-red-500 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg"
-    >
+    <p class="col-span-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg">
       {{ apiError }}
     </p>
   }
 
   <!-- User Name Input -->
   <hlm-form-field class="col-span-2">
+    @let nameControl = registerForm.get('name');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
@@ -26,12 +27,12 @@
       placeholder="UserName"
     />
 
-    @if (registerForm.get('name')?.errors && registerForm.get('name')?.touched) {
-      @if (registerForm.get('name')?.getError('required')) {
+    @if (nameControl?.errors && nameControl?.touched) {
+      @if (nameControl?.getError('required')) {
         <hlm-error>The name is required.</hlm-error>
-      } @else if (registerForm.get('name')?.getError('maxlength')) {
+      } @else if (nameControl?.getError('maxlength')) {
         <hlm-error>Max Length is 20</hlm-error>
-      } @else if (registerForm.get('name')?.getError('minlength')) {
+      } @else if (nameControl?.getError('minlength')) {
         <hlm-error>Min Length is 3</hlm-error>
       }
     }
@@ -39,6 +40,7 @@
 
   <!-- Email Input -->
   <hlm-form-field class="col-span-2">
+    @let emailControl = registerForm.get('email');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
@@ -47,29 +49,40 @@
       placeholder="Email"
     />
 
-    @if (registerForm.get('email')?.errors && registerForm.get('email')?.touched) {
-      @if (registerForm.get('email')?.getError('required')) {
+    @if (emailControl?.errors && emailControl?.touched) {
+      @if (emailControl?.getError('required')) {
         <hlm-error>The email is required.</hlm-error>
-      } @else if (registerForm.get('email')?.getError('pattern')) {
+      } @else if (emailControl?.getError('pattern')) {
         <hlm-error>Invalid Email Format</hlm-error>
       }
     }
   </hlm-form-field>
 
   <!-- Password Input -->
-  <hlm-form-field class="col-span-1">
+  <hlm-form-field class="col-span-1 relative">
+    @let passwordControl = registerForm.get('password');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
       formControlName="password"
-      type="password"
+      [type]="passwordEye ? 'text' : 'password' "
       placeholder="Password"
     />
-
-    @if (registerForm.get('password')?.errors && registerForm.get('password')?.touched) {
-      @if (registerForm.get('password')?.getError('required')) {
+    <!-- Show Password -->
+    <span
+      class="absolute top-1.5 right-3 text-slate-500 cursor-pointer"
+      (click)="toggleShowPassword()"
+    >
+      @if (!passwordEye) {
+        <i class="fa fa-eye text-sm"></i>
+      } @else {
+        <i class="fa fa-eye-slash text-sm"></i>
+      }
+    </span>
+    @if (passwordControl?.errors && passwordControl?.touched) {
+      @if (passwordControl?.getError('required')) {
         <hlm-error>The Password is required.</hlm-error>
-      } @else if (registerForm.get('password')?.getError('pattern')) {
+      } @else if (passwordControl?.getError('pattern')) {
         <hlm-error>Invalid Password Format</hlm-error>
       }
     }
@@ -77,6 +90,7 @@
 
   <!-- RePassword Input -->
   <hlm-form-field class="col-span-1">
+    @let rePasswordControl = registerForm.get('rePassword');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
@@ -86,10 +100,9 @@
     />
 
     @if (
-      registerForm.get('rePassword')?.touched &&
-      (registerForm.get('rePassword')?.errors || registerForm.getError('misMatch'))
+      rePasswordControl?.touched && (rePasswordControl?.errors || registerForm.getError('misMatch'))
     ) {
-      @if (registerForm.get('rePassword')?.getError('required')) {
+      @if (rePasswordControl?.getError('required')) {
         <hlm-error>The Password is required.</hlm-error>
       } @else if (registerForm.getError('misMatch')) {
         <hlm-error>Password MisMatch</hlm-error>
@@ -99,6 +112,7 @@
 
   <!-- Phone Input -->
   <hlm-form-field class="col-span-2">
+    @let phoneControl = registerForm.get('phone');
     <input
       class="bg-white focus-visible:border-main focus-visible:ring-main/30 [&.ng-invalid.ng-touched]:focus-visible:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive/30"
       hlmInput
@@ -107,15 +121,16 @@
       placeholder="Phone Number"
     />
 
-    @if (registerForm.get('phone')?.errors && registerForm.get('phone')?.touched) {
-      @if (registerForm.get('phone')?.getError('required')) {
+    @if (phoneControl?.errors && phoneControl?.touched) {
+      @if (phoneControl?.getError('required')) {
         <hlm-error>The phone is required.</hlm-error>
-      } @else if (registerForm.get('phone')?.getError('pattern')) {
+      } @else if (phoneControl?.getError('pattern')) {
         <hlm-error>Invalid phone Format</hlm-error>
       }
     }
   </hlm-form-field>
 
+  <!-- Submit Button -->
   <button
     type="submit"
     [disabled]="isCallingApi()"
