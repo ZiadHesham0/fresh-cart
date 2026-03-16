@@ -7,14 +7,14 @@ import {
   OnDestroy,
   ElementRef,
 } from '@angular/core';
-import { isPlatformBrowser, NgClass } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AsyncPipe, isPlatformBrowser, NgClass } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NgClass, RouterLink, RouterLinkActive],
+  imports: [NgClass, RouterLink, RouterLinkActive, AsyncPipe],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -22,23 +22,32 @@ export class Navbar implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private el = inject(ElementRef);
   _authService = inject(AuthService);
+  _route = inject(Router);
+  isLoggedIn: any;
 
+  constructor() {
+    console.log(this._authService.userData, 'hello from naaav component');
+    this.isLoggedIn = this._authService.userData;
+    console.log(this.isLoggedIn, 'hiiiiiiiiiiii');
 
-  constructor(){
-    // console.log(this._authService.userData() , "hello from naaav component");
-    // this._authService.userData.subscribe({
-    //   next:(res)=>{
-    //     console.log(res , "hello from naaav componentttttttttt");
-    //   },
-    //   error:(err)=>{
-    //     console.log(err);
-    //   }
-    // })
-    console.log(this._authService.userData() , "signaaaal navbarrr");
-    
+    // console.log(this._authService.userData() , "signaaaal navbarrr");
   }
 
-
+  checkLoggingStatus() {
+    this._authService.userData.subscribe({
+      next:(res)=>{
+        console.log(res , "hello from nav component");
+        this.isLoggedIn = res ;
+        console.log(this.isLoggedIn);
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
+  signOut(){
+    this._authService.logOut();
+  }
 
   /** Mobile/tablet right drawer state */
   drawerOpen = signal(false);
@@ -58,14 +67,12 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
     this.outsideClickHandler = (e: MouseEvent) => {
       if (!this.el.nativeElement.contains(e.target as Node)) {
         this.openDropdown.set(null);
       }
     };
     document.addEventListener('click', this.outsideClickHandler);
-
     this.escHandler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         this.drawerOpen.set(false);
@@ -73,12 +80,10 @@ export class Navbar implements OnInit, OnDestroy {
       }
     };
     document.addEventListener('keydown', this.escHandler);
-
     this.touchStartHandler = (e: TouchEvent) => {
       this.touchStartX = e.touches[0].clientX;
       this.touchStartY = e.touches[0].clientY;
     };
-
     this.touchEndHandler = (e: TouchEvent) => {
       const dx = e.changedTouches[0].clientX - this.touchStartX;
       const dy = Math.abs(e.changedTouches[0].clientY - this.touchStartY);
@@ -93,9 +98,12 @@ export class Navbar implements OnInit, OnDestroy {
         this.drawerOpen.set(false);
       }
     };
-
     document.addEventListener('touchstart', this.touchStartHandler, { passive: true });
     document.addEventListener('touchend', this.touchEndHandler, { passive: true });
+
+    // zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    // zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    this.checkLoggingStatus();
   }
 
   ngOnDestroy(): void {
